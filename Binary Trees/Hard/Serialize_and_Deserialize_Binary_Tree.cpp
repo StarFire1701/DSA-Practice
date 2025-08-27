@@ -12,7 +12,7 @@
 #include <sstream>
 using namespace std;
 
-class Codec {
+class Code {
 public:
 
     // Encodes a tree to a single string.
