@@ -1,0 +1,49 @@
+class FoodRatings {
+public:
+    private:
+    // For each cuisine, a set of pairs: (−rating, food)
+    unordered_map<string, set<pair<int, string>>> cuisineSet;
+    unordered_map<string, string> foodToCuisine;
+    unordered_map<string, int> foodRating;
+
+public:
+    FoodRatings(vector<string>& foods, vector<string>& cuisines, vector<int>& ratings) {
+        int n = foods.size();
+        for (int i = 0; i < n; i++) {
+            string food = foods[i];
+            string cuisine = cuisines[i];
+            int rating = ratings[i];
+            // Store mapping
+            foodToCuisine[food] = cuisine;
+            foodRating[food] = rating;
+            // Use negative rating to put highest first
+            cuisineSet[cuisine].insert({ -rating, food });
+        }
+    }
+
+    void changeRating(string food, int newRating) {
+        string cuisine = foodToCuisine[food];
+        int oldRating = foodRating[food];
+        auto &s = cuisineSet[cuisine];
+        // Remove old entry
+        s.erase({ -oldRating, food });
+        // Insert new
+        s.insert({ -newRating, food });
+        // Update rating map
+        foodRating[food] = newRating;
+    }
+
+    string highestRated(string cuisine) {
+        auto &s = cuisineSet[cuisine];
+        // Begin() gives the smallest (−rating) i.e highest rating,
+        // tie broken by lex food name
+        return s.begin()->second;
+    }
+};
+
+/**
+ * Your FoodRatings object will be instantiated and called as such:
+ * FoodRatings* obj = new FoodRatings(foods, cuisines, ratings);
+ * obj->changeRating(food,newRating);
+ * string param_2 = obj->highestRated(cuisine);
+ */
